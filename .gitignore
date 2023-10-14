@@ -341,12 +341,12 @@ pip-selfcheck.json
 # End of https://www.toptal.com/developers/gitignore/api/visualstudiocode,python,venv,virtualenv,clion,cmake
 
 # image files in cppVersion and pythonVersion path
-cppVersion/*.jpg
-cppVersion/*.JPG
-cppVersion/*.png
-cppVersion/*.PNG
+cppVersion/**.jpg
+cppVersion/**.JPG
+cppVersion/**.png
+cppVersion/**.PNG
 
-pythonVersion/*.jpg
-pythonVersion/*.JPG
-pythonVersion/*.png
-pythonVersion/*.PNG
+pythonVersion/**.jpg
+pythonVersion/**.JPG
+pythonVersion/**.png
+pythonVersion/**.PNG

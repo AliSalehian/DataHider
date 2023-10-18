@@ -24,7 +24,7 @@ def get_bit_array(number):
 
 
 # TODO: add type hint and document
-def hide(key, tag, nonce, message, image_path):
+def hide_process(key, tag, nonce, message, image_path):
     i, j, k = 0, 0, 0
     message += b"xyzXYZ"
     image = Image.open(image_path)
@@ -49,13 +49,14 @@ def hide(key, tag, nonce, message, image_path):
     return Image.fromarray(image_matrix)
 
 
+def hide(source_path, message, result_name):
+    cipher_text, tag, nonce, key = encrypt(message.encode("utf-8"))
+    result_image = hide_process(key, tag, nonce, cipher_text, source_path)
+    result_image.save(f"{result_name}.png")
+
+
 if __name__ == "__main__":
-    cipher_text, tag, nonce, key = encrypt(b"hello")
-    cipher = AES.new(key, AES.MODE_EAX, nonce)
-    plaint_text = cipher.decrypt_and_verify(cipher_text, tag)
-    print(plaint_text)
-    print(
-        f"length of key: {len(key)}, length of tag: {len(tag)}, length of nonce: {len(nonce)} and length of cipher text: {len(cipher_text)}"
-    )
-    result_image = hide(key, tag, nonce, cipher_text, "test.jpg")
-    result_image.save("hasan.png")
+    hide("test.jpg", "hello", "hasan")
+    # cipher_text, tag, nonce, key = encrypt(b"hello")
+    # result_image = hide_process(key, tag, nonce, cipher_text, "test.jpg")
+    # result_image.save("hasan.png")

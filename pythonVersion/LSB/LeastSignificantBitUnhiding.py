@@ -86,6 +86,11 @@ def decrypt(key, tag, nonce, cipher_text):
     return plaint_text
 
 
+def reveal(source_path):
+    key, tag, nonce, cipher_text = derive_information(source_path)
+    return decrypt(key, tag, nonce, cipher_text[:-6])
+
+
 if __name__ == "__main__":
     key, tag, nonce, cipher_text = derive_information("hasan.png")
     print(decrypt(key, tag, nonce, cipher_text[:-6]))

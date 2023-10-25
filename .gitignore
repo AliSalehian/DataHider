@@ -350,3 +350,4 @@ pythonVersion/**/*.jpg
 pythonVersion/**/*.JPG
 pythonVersion/**/*.png
 pythonVersion/**/*.PNG
+cppVersion/.idea

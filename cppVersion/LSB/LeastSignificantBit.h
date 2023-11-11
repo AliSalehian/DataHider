@@ -9,10 +9,15 @@
 #include <opencv2/core.hpp>
 #include <opencv2/imgcodecs.hpp>
 #include <vector>
+#include <openssl/aes.h>
+#include <openssl/evp.h>
+#include <openssl/err.h>
 
 
 namespace LSB {
     std::string reveal(const std::string& imagePath);
+    void handleErrors();
+    std::string decryptAESGCM(const std::string& ciphertext, const std::string& key, const std::string& iv, const std::string& tag);
 }
 
 

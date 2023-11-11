@@ -1,7 +1,8 @@
 #include "LSB/LeastSignificantBit.h"
 
 int main() {
-    LSB::reveal("../mahnaz.png");
+    std::string plainText = LSB::reveal("../hasan.png");
+    std::cout << plainText << std::endl;
     return 0;
 //    cv::Mat image = cv::imread("../mahnaz.png");
 //    int counter = 0;

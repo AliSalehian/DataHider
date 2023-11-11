@@ -56,7 +56,66 @@ std::string LSB::reveal(const std::string &imagePath) {
         }
     }
     // endregion
+
+    // region decrypt
     cipherText.resize(cipherText.size() - 6);
-    std::string cipherTextString1(cipherText.begin(), cipherText.end());
-    std::cout << cipherTextString1 << std::endl;
+    std::string cipherTextString(cipherText.begin(), cipherText.end());
+    std::string keyString(key.begin(), key.end());
+    std::string nonceString(nonce.begin(), nonce.end());
+    std::string tagString(tag.begin(), tag.end());
+    return decryptAESGCM(cipherTextString, keyString, nonceString, tagString);
+    // endregion
+}
+
+void LSB::handleErrors() {
+    ERR_print_errors_fp(stderr);
+    abort();
+}
+
+std::string LSB::decryptAESGCM(const std::string& ciphertext, const std::string& key, const std::string& iv, const std::string& tag) {
+    OpenSSL_add_all_algorithms();
+
+    EVP_CIPHER_CTX* ctx = EVP_CIPHER_CTX_new();
+    if (!ctx) {
+        handleErrors();
+    }
+
+    if (EVP_DecryptInit_ex(ctx, EVP_aes_128_gcm(), NULL, NULL, NULL) != 1) {
+        handleErrors();
+    }
+
+    if (EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_SET_IVLEN, static_cast<int>(iv.size()), NULL) != 1) {
+        handleErrors();
+    }
+
+    if (EVP_DecryptInit_ex(ctx, NULL, NULL, reinterpret_cast<const unsigned char*>(key.c_str()), reinterpret_cast<const unsigned char*>(iv.c_str())) != 1) {
+        handleErrors();
+    }
+
+    if (EVP_DecryptUpdate(ctx, NULL, NULL, reinterpret_cast<const unsigned char*>(tag.c_str()), tag.size()) != 1) {
+//        handleErrors();
+    }
+
+    std::string plaintext;
+    plaintext.resize(ciphertext.size());
+
+    int len;
+    if (EVP_DecryptUpdate(ctx, reinterpret_cast<unsigned char*>(&plaintext[0]), &len, reinterpret_cast<const unsigned char*>(ciphertext.c_str()), ciphertext.size()) != 1) {
+//        handleErrors();
+    }
+
+    int plaintext_len = len;
+
+    if (EVP_DecryptFinal_ex(ctx, reinterpret_cast<unsigned char*>(&plaintext[0] + len), &len) != 1) {
+//        handleErrors();
+    }
+
+    plaintext_len += len;
+
+    EVP_CIPHER_CTX_free(ctx);
+
+    // Resize the plaintext to its actual length
+    plaintext.resize(plaintext_len);
+
+    return plaintext;
 }

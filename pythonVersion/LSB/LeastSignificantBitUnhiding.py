@@ -82,7 +82,6 @@ def derive_information(image_path):
 # TODO: add type hint and document
 def decrypt(key, tag, nonce, cipher_text):
     cipher = AES.new(key, AES.MODE_GCM, nonce)
-    cipher.update(b"freakydad")
     plaint_text = cipher.decrypt_and_verify(cipher_text, tag)
     return plaint_text
 

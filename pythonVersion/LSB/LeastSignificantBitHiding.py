@@ -9,7 +9,6 @@ from collections import deque
 def encrypt(message):
     key = get_random_bytes(16)
     cipher = AES.new(key, AES.MODE_GCM)
-    cipher.update(b"freakydad")
     cipher_text, tag = cipher.encrypt_and_digest(message)
     nonce = cipher.nonce
     return cipher_text, tag, nonce, key
